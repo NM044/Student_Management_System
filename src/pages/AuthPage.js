@@ -40,7 +40,7 @@ export default function AuthPage({ onLogin }) {
           <GraduationCap size={36} color="#fff" />
         </div>
         <h1>EduManage</h1>
-        <p>A complete student management system for teachers and students.</p>
+        <p>A complete student daily attendance management system for teachers and students.</p>
       </div>
 
       <div className="auth-right">

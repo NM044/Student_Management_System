@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   LayoutDashboard, Users, ClipboardList, CalendarDays, BarChart2,
@@ -41,6 +42,7 @@ export default function TeacherDashboard({ user, onLogout }) {
   const [attDate, setAttDate]     = useState(today);
   const [attMap, setAttMap]       = useState({});
   const [attMsg, setAttMsg]       = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState(null);
 
   const courseStudents = students.filter((s) => s.course === selCourse);
 
@@ -49,7 +51,26 @@ export default function TeacherDashboard({ user, onLogout }) {
     const ex = attendance.find((a) => a.username === username && a.date === attDate && a.course === selCourse);
     return ex ? ex.status : "Present";
   };
+const AllPresent = () => {
+  const allPresent = {};
 
+  courseStudents.forEach((student) => {
+    allPresent[student.username] = "Present";
+  });
+
+  setAttMap(allPresent);
+};
+
+
+const AllAbsent = () => {
+  const allAbsent = {};
+
+  courseStudents.forEach((student) => {
+    allAbsent[student.username] = "Absent";
+  });
+
+  setAttMap(allAbsent);
+};
   const handleSaveAtt = () => {
     saveAttendance(courseStudents.map((s) => ({ username: s.username, date: attDate, status: getAttStatus(s.username), course: selCourse })));
     setAttMsg("Attendance saved successfully!");
@@ -252,6 +273,30 @@ export default function TeacherDashboard({ user, onLogout }) {
             </div>
 
             {attMsg && <div className="alert alert-success">{attMsg}</div>}
+            <div style={{
+  display: "flex",
+  gap: "10px",
+  marginBottom: "20px"
+}}>
+
+  <button
+    className="btn btn-primary"
+    onClick={AllPresent}
+  >
+    <CheckCircle2 size={15} />
+     All Present
+  </button>
+
+
+  <button
+    className="btn btn-danger"
+    onClick={AllAbsent}
+  >
+    <XCircle size={15} />
+     All Absent
+  </button>
+
+</div>
 
             {courseStudents.length === 0 ? (
               <div className="card"><div className="empty-state"><Users size={40} /><p>No students in this course.</p></div></div>
@@ -286,33 +331,143 @@ export default function TeacherDashboard({ user, onLogout }) {
               </>
             )}
 
-            <hr className="divider" />
-            <div className="card">
-              <div className="card-title"><CalendarDays size={16} /> Attendance Records</div>
-              {attendance.length === 0 ? (
-                <div className="empty-state"><CalendarDays size={40} /><p>No records yet.</p></div>
-              ) : (
-                <div className="table-wrap">
-                  <table>
-                    <thead><tr><th>#</th><th>Student</th><th>Date</th><th>Course</th><th>Status</th></tr></thead>
-                    <tbody>
-                      {[...attendance].reverse().slice(0, 50).map((a, i) => {
-                        const stu = students.find((s) => s.username === a.username);
-                        return (
-                          <tr key={i}>
-                            <td>{i + 1}</td>
-                            <td><strong>{stu?.full_name || a.username}</strong></td>
-                            <td>{a.date}</td>
-                            <td>{a.course}</td>
-                            <td><span className={`badge ${a.status === "Present" ? "badge-green" : "badge-red"}`}>{a.status}</span></td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
+             <div className="card">
+
+  <div className="card-title">
+    <CalendarDays size={16} />
+    Student Attendance Records
+  </div>
+
+
+  {/* STUDENT BUTTONS */}
+
+  <div
+    style={{
+      display: "flex",
+      gap: "10px",
+      flexWrap: "wrap",
+      marginBottom: "20px"
+    }}
+  >
+
+    {students.map((student) => (
+
+      <button
+        key={student.username}
+        className="btn btn-primary"
+        onClick={() =>
+          setSelectedStudent(student.username)
+        }
+      >
+
+        {student.full_name}
+
+      </button>
+
+    ))}
+
+  </div>
+
+
+  {/* SELECTED STUDENT RECORD */}
+
+  {selectedStudent ? (
+
+    <>
+
+      <h3 style={{ marginBottom: "15px" }}>
+
+        {
+          students.find(
+            (s) => s.username === selectedStudent
+          )?.full_name
+        }
+
+        {" "}Attendance History
+
+      </h3>
+
+
+      <div className="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>#</th>
+              <th>Date</th>
+              <th>Course</th>
+              <th>Status</th>
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            {[...attendance]
+
+              .filter(
+                (a) =>
+                  a.username === selectedStudent
+              )
+
+              .reverse()
+
+              .map((a, i) => (
+
+                <tr key={i}>
+
+                  <td>{i + 1}</td>
+
+                  <td>{a.date}</td>
+
+                  <td>{a.course}</td>
+
+                  <td>
+
+                    <span
+                      className={`badge ${
+                        a.status === "Present"
+                          ? "badge-green"
+                          : "badge-red"
+                      }`}
+                    >
+
+                      {a.status}
+
+                    </span>
+
+                  </td>
+
+                </tr>
+
+              ))}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </>
+
+  ) : (
+
+    <div className="empty-state">
+
+      <Users size={40} />
+
+      <p>
+        Click on a student to view attendance record.
+      </p>
+
+    </div>
+
+  )}
+
+</div>
           </>
         )}
 
@@ -394,3 +549,4 @@ export default function TeacherDashboard({ user, onLogout }) {
     </div>
   );
 }
+
