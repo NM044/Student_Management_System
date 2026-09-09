@@ -15,6 +15,8 @@ const NAV = [
 
 export default function StudentDashboard({ user, onLogout }) {
   const [menu, setMenu] = useState("dashboard");
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [answer, setAnswer] = useState(""); 
 
   const myAttendance  = getAttendance().filter((a) => a.username === user.username);
   const myMarks       = getMarks().filter((m) => m.student_username === user.username);
@@ -25,10 +27,29 @@ export default function StudentDashboard({ user, onLogout }) {
   const attPct  = myAttendance.length ? Math.round((present / myAttendance.length) * 100) : 0;
   const pending = allAssignments.filter((a) => !mySubmissions.find((s) => s.assignment_id === a.id)).length;
 
-  const handleSubmit = (aid) => {
-    addSubmission({ assignment_id: aid, student_username: user.username, submitted_on: new Date().toISOString().split("T")[0], status: "Submitted" });
-    window.location.reload();
-  };
+ const handleSubmit = (aid) => {
+
+  if (!answer.trim()) {
+    alert("Please write your answer before submitting!");
+    return;
+  }
+
+  addSubmission({
+    assignment_id: aid,
+    student_username: user.username,
+    answer: answer,
+    submitted_on: new Date().toISOString().split("T")[0],
+    status: "Submitted"
+  });
+
+  alert("Assignment submitted successfully!");
+
+  setAnswer("");
+  setSelectedAssignment(null);
+
+  window.location.reload();
+};
+  
 
   return (
     <div className="layout">
@@ -192,6 +213,7 @@ export default function StudentDashboard({ user, onLogout }) {
             <div className="page-header">
               <h1>Assignments</h1>
               <p>Your course assignments</p>
+            
             </div>
             {allAssignments.length === 0 ? (
               <div className="card"><div className="empty-state"><ClipboardList size={40} /><p>No assignments posted yet.</p></div></div>
@@ -205,6 +227,44 @@ export default function StudentDashboard({ user, onLogout }) {
                       <div className="assignment-info">
                         <h4>{a.title}</h4>
                         <p>{a.description}</p>
+                        {selectedAssignment === a.id && !submitted && (
+
+  <div
+    style={{
+      marginTop: "20px",
+      padding: "15px",
+      borderTop: "1px solid #ddd"
+    }}
+  >
+
+    <h4>Write Your Answer</h4>
+
+    <textarea
+      rows="6"
+      value={answer}
+      onChange={(e) => setAnswer(e.target.value)}
+      placeholder="Write your assignment answer here..."
+      style={{
+        width: "100%",
+        marginTop: "10px",
+        padding: "10px"
+      }}
+    />
+
+    <div style={{ marginTop: "10px" }}>
+
+      <button
+        className="btn btn-success"
+        onClick={() => handleSubmit(a.id)}
+      >
+        <CheckCircle2 size={14} /> Submit Assignment
+      </button>
+
+    </div>
+
+  </div>
+
+)}
                         <div className="assignment-meta">
                           <span className="badge badge-blue"><BookOpen size={10} style={{ display: "inline", marginRight: 3 }} />{a.course}</span>
                           <span className={`badge ${overdue && !submitted ? "badge-red" : "badge-yellow"}`}>Due: {a.due_date}</span>
@@ -212,11 +272,17 @@ export default function StudentDashboard({ user, onLogout }) {
                           {overdue && !submitted && <span className="badge badge-red">Overdue</span>}
                         </div>
                       </div>
-                      {!submitted && (
-                        <button className="btn btn-success btn-sm" onClick={() => handleSubmit(a.id)}>
-                          <CheckCircle2 size={14} /> Submit
-                        </button>
-                      )}
+                        {!submitted && (
+                     <button
+                      className="btn btn-primary btn-sm"
+                      onClick={() => {
+                       setSelectedAssignment(a.id);
+                      setAnswer("");
+                        }}
+                         >
+                        <ClipboardList size={14} /> Write Answer
+                         </button>
+                         )}
                     </div>
                   );
                 })}

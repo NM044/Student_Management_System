@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import {
   LayoutDashboard, Users, ClipboardList, CalendarDays, BarChart2,
-  CheckCircle2, XCircle, Trash2, Plus, Save,
+  CheckCircle2, XCircle, Trash2, Plus, Save,BookOpen,
 } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import {
@@ -22,6 +22,8 @@ const NAV = [
 const today = new Date().toISOString().split("T")[0];
 
 export default function TeacherDashboard({ user, onLogout }) {
+  const [selectedCourse, setSelectedCourse] = useState(null);
+const [selectedDivision, setSelectedDivision] = useState(null);
   const [menu, setMenu] = useState("dashboard");
   const [refresh, setRefresh] = useState(0);
   const reload = () => setRefresh((r) => r + 1);
@@ -163,95 +165,797 @@ const AllAbsent = () => {
         )}
 
         {/* ── MANAGE STUDENTS ── */}
-        {menu === "students" && (
-          <>
-            <div className="page-header">
-              <h1>Manage Students</h1>
-              <p>{students.length} students registered</p>
+{menu === "students" && (
+  <>
+    <div className="page-header">
+
+      <h1>Manage Students</h1>
+
+      <p>{students.length} students registered</p>
+
+    </div>
+
+
+    {/* NO STUDENTS */}
+
+    {students.length === 0 ? (
+
+      <div className="card">
+
+        <div className="empty-state">
+
+          <Users size={40} />
+
+          <p>No students registered yet.</p>
+
+        </div>
+
+      </div>
+
+    ) : (
+
+      <>
+      
+        {/* ===================== */}
+        {/* COURSE LIST */}
+        {/* ===================== */}
+
+        {!selectedCourse && (
+
+          <div className="card">
+
+            <div className="card-title">
+
+              Select Course
+
             </div>
+
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(auto-fit, minmax(220px, 1fr))",
+                gap: "20px"
+              }}
+            >
+
+              {[...new Set(
+                students.map(
+                  (s) => s.course || "No Course"
+                )
+              )].map((course) => {
+
+                const courseStudents =
+                  students.filter(
+                    (s) =>
+                      (s.course || "No Course") === course
+                  );
+
+
+                return (
+
+                  <div
+                    key={course}
+
+                    onClick={() => {
+
+                      setSelectedCourse(course);
+
+                      setSelectedDivision(null);
+
+                    }}
+
+                    style={{
+                      padding: "25px",
+                      border: "1px solid #ddd",
+                      borderRadius: "10px",
+                      cursor: "pointer",
+                      textAlign: "center"
+                    }}
+                  >
+
+                    <BookOpen size={28} />
+
+                    <h3
+                      style={{
+                        marginTop: "10px"
+                      }}
+                    >
+
+                      {course}
+
+                    </h3>
+
+
+                    <p>
+
+                      👥 {courseStudents.length} Students
+
+                    </p>
+
+                  </div>
+
+                );
+
+              })}
+
+            </div>
+
+          </div>
+
+        )}
+
+
+        {/* ===================== */}
+        {/* DIVISION LIST */}
+        {/* ===================== */}
+
+        {selectedCourse &&
+          !selectedDivision && (
+
             <div className="card">
-              {students.length === 0 ? (
-                <div className="empty-state"><Users size={40} /><p>No students registered yet.</p></div>
-              ) : (
-                <div className="table-wrap">
-                  <table>
-                    <thead><tr><th>#</th><th>Name</th><th>Username</th><th>Course</th><th>Division</th><th>Age</th><th>Email</th></tr></thead>
-                    <tbody>
-                      {students.map((s, i) => (
+
+              <button
+
+                className="btn btn-secondary"
+
+                onClick={() => {
+
+                  setSelectedCourse(null);
+
+                }}
+
+                style={{
+                  marginBottom: "20px"
+                }}
+
+              >
+
+                ← Back to Courses
+
+              </button>
+
+
+              <div className="card-title">
+
+                {selectedCourse} - Divisions
+
+              </div>
+
+
+              <div
+                style={{
+                  display: "grid",
+
+                  gridTemplateColumns:
+                    "repeat(auto-fit, minmax(180px, 1fr))",
+
+                  gap: "20px"
+                }}
+              >
+
+                {[...new Set(
+
+                  students
+
+                    .filter(
+                      (s) =>
+                        (s.course || "No Course") ===
+                        selectedCourse
+                    )
+
+                    .map(
+                      (s) =>
+                        s.division || "No Division"
+                    )
+
+                )].map((division) => {
+
+                  const divisionStudents =
+
+                    students.filter(
+
+                      (s) =>
+
+                        (s.course || "No Course") ===
+                        selectedCourse &&
+
+                        (s.division || "No Division") ===
+                        division
+
+                    );
+
+
+                  return (
+
+                    <div
+
+                      key={division}
+
+                      onClick={() => {
+
+                        setSelectedDivision(
+                          division
+                        );
+
+                      }}
+
+                      style={{
+                        padding: "25px",
+
+                        border:
+                          "1px solid #ddd",
+
+                        borderRadius: "10px",
+
+                        cursor: "pointer",
+
+                        textAlign: "center"
+                      }}
+                    >
+
+                      <Users size={28} />
+
+
+                      <h3
+                        style={{
+                          marginTop: "10px"
+                        }}
+                      >
+
+                        Division {division}
+
+                      </h3>
+
+
+                      <p>
+
+                        👥 {divisionStudents.length}
+                        {" "}
+                        Students
+
+                      </p>
+
+                    </div>
+
+                  );
+
+                })}
+
+              </div>
+
+            </div>
+
+          )}
+
+
+        {/* ===================== */}
+        {/* STUDENT LIST */}
+        {/* ===================== */}
+
+        {selectedCourse &&
+          selectedDivision && (
+
+            <div className="card">
+
+
+              <button
+
+                className="btn btn-secondary"
+
+                onClick={() => {
+
+                  setSelectedDivision(null);
+
+                }}
+
+                style={{
+                  marginBottom: "20px"
+                }}
+
+              >
+
+                ← Back to Divisions
+
+              </button>
+
+
+              <div className="card-title">
+
+                {selectedCourse}
+
+                {" → "}
+
+                Division {selectedDivision}
+
+              </div>
+
+
+              <div className="table-wrap">
+
+                <table>
+
+                  <thead>
+
+                    <tr>
+
+                      <th>#</th>
+
+                      <th>Name</th>
+
+                      <th>Username</th>
+
+                      <th>Age</th>
+
+                      <th>Email</th>
+
+                    </tr>
+
+                  </thead>
+
+
+                  <tbody>
+
+                    {students
+
+                      .filter(
+
+                        (s) =>
+
+                          (s.course || "No Course") ===
+                          selectedCourse &&
+
+                          (s.division || "No Division") ===
+                          selectedDivision
+
+                      )
+
+                      .map((s, i) => (
+
                         <tr key={s.id}>
+
                           <td>{i + 1}</td>
-                          <td><strong>{s.full_name}</strong></td>
-                          <td><span className="badge badge-gray">@{s.username}</span></td>
-                          <td><span className="badge badge-blue">{s.course || "—"}</span></td>
-                          <td>{s.division || "—"}</td>
-                          <td>{s.age || "—"}</td>
-                          <td>{s.email || "—"}</td>
+
+
+                          <td>
+
+                            <strong>
+
+                              {s.full_name}
+
+                            </strong>
+
+                          </td>
+
+
+                          <td>
+
+                            <span
+                              className="badge badge-gray"
+                            >
+
+                              @{s.username}
+
+                            </span>
+
+                          </td>
+
+
+                          <td>
+
+                            {s.age || "—"}
+
+                          </td>
+
+
+                          <td>
+
+                            {s.email || "—"}
+
+                          </td>
+
+
                         </tr>
+
                       ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-          </>
-        )}
 
-        {/* ── ASSIGNMENTS ── */}
-        {menu === "assignments" && (
-          <>
-            <div className="page-header">
-              <h1>Assignments</h1>
-              <p>Create and manage assignments</p>
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "380px 1fr", gap: 20, alignItems: "start" }}>
-              <div className="card">
-                <div className="card-title"><Plus size={16} /> Create Assignment</div>
-                {aMsg && <div className={`alert alert-${aMsg.type === "error" ? "error" : "success"}`}>{aMsg.text}</div>}
-                <form onSubmit={handlePostAssignment}>
-                  <div className="form-group"><label>Title *</label><input value={aForm.title} onChange={(e) => setAForm({ ...aForm, title: e.target.value })} placeholder="Assignment title" /></div>
-                  <div className="form-group"><label>Description</label><textarea rows={3} value={aForm.description} onChange={(e) => setAForm({ ...aForm, description: e.target.value })} placeholder="Details..." style={{ resize: "vertical" }} /></div>
-                  <div className="form-row">
-                    <div className="form-group"><label>Course *</label><input value={aForm.course} onChange={(e) => setAForm({ ...aForm, course: e.target.value })} placeholder="e.g. CS" /></div>
-                    <div className="form-group"><label>Due Date</label><input type="date" value={aForm.due_date} onChange={(e) => setAForm({ ...aForm, due_date: e.target.value })} /></div>
-                  </div>
-                  <button type="submit" className="btn btn-primary btn-full"><Plus size={15} /> Post Assignment</button>
-                </form>
+                  </tbody>
+
+                </table>
+
               </div>
 
-              <div className="card">
-                <div className="card-title"><ClipboardList size={16} /> All Assignments ({assignments.length})</div>
-                {assignments.length === 0 ? (
-                  <div className="empty-state"><ClipboardList size={40} /><p>No assignments yet.</p></div>
-                ) : (
-                  <div className="table-wrap">
-                    <table>
-                      <thead><tr><th>Title</th><th>Course</th><th>Due Date</th><th>Submissions</th><th>Action</th></tr></thead>
-                      <tbody>
-                        {[...assignments].reverse().map((a) => {
-                          const subCount = submissions.filter((s) => s.assignment_id === a.id).length;
-                          return (
-                            <tr key={a.id}>
-                              <td><strong>{a.title}</strong><br /><span style={{ fontSize: 12, color: "var(--muted)" }}>{a.description}</span></td>
-                              <td><span className="badge badge-blue">{a.course}</span></td>
-                              <td>{a.due_date}</td>
-                              <td><span className="badge badge-green">{subCount}</span></td>
-                              <td>
-                                <button className="btn btn-danger btn-sm" onClick={() => { deleteAssignment(a.id); reload(); }}>
-                                  <Trash2 size={13} /> Delete
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
             </div>
-          </>
+
+          )}
+
+      </>
+
+    )}
+
+  </>
+)}
+              {/* ── ASSIGNMENTS ── */}
+{menu === "assignments" && (
+  <>
+    <div className="page-header">
+      <h1>Assignments</h1>
+      <p>Create and manage assignments</p>
+    </div>
+
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "380px 1fr",
+        gap: 20,
+        alignItems: "start"
+      }}
+    >
+
+      {/* CREATE ASSIGNMENT */}
+
+      <div className="card">
+
+        <div className="card-title">
+          <Plus size={16} /> Create Assignment
+        </div>
+
+        {aMsg && (
+          <div
+            className={`alert alert-${
+              aMsg.type === "error" ? "error" : "success"
+            }`}
+          >
+            {aMsg.text}
+          </div>
         )}
 
+        <form onSubmit={handlePostAssignment}>
+
+          <div className="form-group">
+            <label>Title *</label>
+
+            <input
+              value={aForm.title}
+              onChange={(e) =>
+                setAForm({
+                  ...aForm,
+                  title: e.target.value
+                })
+              }
+              placeholder="Assignment title"
+            />
+          </div>
+
+
+          <div className="form-group">
+
+            <label>Description</label>
+
+            <textarea
+              rows={3}
+              value={aForm.description}
+              onChange={(e) =>
+                setAForm({
+                  ...aForm,
+                  description: e.target.value
+                })
+              }
+              placeholder="Details..."
+              style={{ resize: "vertical" }}
+            />
+
+          </div>
+
+
+          <div className="form-row">
+
+            <div className="form-group">
+
+              <label>Course *</label>
+
+              <input
+                value={aForm.course}
+                onChange={(e) =>
+                  setAForm({
+                    ...aForm,
+                    course: e.target.value
+                  })
+                }
+                placeholder="e.g. CS"
+              />
+
+            </div>
+
+
+            <div className="form-group">
+
+              <label>Due Date</label>
+
+              <input
+                type="date"
+                value={aForm.due_date}
+                onChange={(e) =>
+                  setAForm({
+                    ...aForm,
+                    due_date: e.target.value
+                  })
+                }
+              />
+
+            </div>
+
+          </div>
+
+
+          <button
+            type="submit"
+            className="btn btn-primary btn-full"
+          >
+            <Plus size={15} /> Post Assignment
+          </button>
+
+        </form>
+
+      </div>
+
+
+      {/* ALL ASSIGNMENTS */}
+
+      <div className="card">
+
+        <div className="card-title">
+          <ClipboardList size={16} />
+          All Assignments ({assignments.length})
+        </div>
+
+
+        {assignments.length === 0 ? (
+
+          <div className="empty-state">
+
+            <ClipboardList size={40} />
+
+            <p>No assignments yet.</p>
+
+          </div>
+
+        ) : (
+
+          <div className="table-wrap">
+
+            <table>
+
+
+              {/* TABLE HEADING */}
+
+              <thead>
+
+                <tr>
+
+                  <th>Title</th>
+
+                  <th>Course</th>
+
+                  <th>Due Date</th>
+
+                  <th>Submissions</th>
+
+                  <th>View Answers</th>
+
+                  <th>Action</th>
+
+                </tr>
+
+              </thead>
+
+
+              {/* TABLE BODY */}
+
+              <tbody>
+
+                {[...assignments]
+                  .reverse()
+                  .map((a) => {
+
+                    const subCount =
+                      submissions.filter(
+                        (s) =>
+                          s.assignment_id === a.id
+                      ).length;
+
+
+                    return (
+
+                      <tr key={a.id}>
+
+
+                        {/* TITLE */}
+
+                        <td>
+
+                          <strong>
+                            {a.title}
+                          </strong>
+
+                          <br />
+
+                          <span
+                            style={{
+                              fontSize: 12,
+                              color: "var(--muted)"
+                            }}
+                          >
+                            {a.description}
+                          </span>
+
+                        </td>
+
+
+                        {/* COURSE */}
+
+                        <td>
+
+                          <span className="badge badge-blue">
+
+                            {a.course}
+
+                          </span>
+
+                        </td>
+
+
+                        {/* DUE DATE */}
+
+                        <td>
+
+                          {a.due_date}
+
+                        </td>
+
+
+                        {/* SUBMISSIONS */}
+
+                        <td>
+
+                          <span className="badge badge-green">
+
+                            {subCount}
+
+                          </span>
+
+                        </td>
+
+
+                        {/* VIEW ANSWERS */}
+
+                        <td>
+
+                          <button
+                            className="btn btn-primary btn-sm"
+
+                            onClick={() => {
+
+                              const assignmentSubmissions =
+                                submissions.filter(
+                                  (s) =>
+                                    s.assignment_id === a.id
+                                );
+
+
+                              if (
+                                assignmentSubmissions.length === 0
+                              ) {
+
+                                alert(
+                                  "No student submissions yet!"
+                                );
+
+                                return;
+
+                              }
+
+
+                              const result =
+                                assignmentSubmissions
+                                  .map((s) => {
+
+                                    const student =
+                                      students.find(
+                                        (st) =>
+                                          st.username ===
+                                          s.student_username
+                                      );
+
+
+                                    return (
+
+                                      "Student: " +
+
+                                      (
+                                        student?.full_name ||
+                                        s.student_username
+                                      ) +
+
+                                      "\n\nAnswer:\n" +
+
+                                      (
+                                        s.answer ||
+                                        "No answer"
+                                      ) +
+
+                                      "\n\n--------------------"
+
+                                    );
+
+                                  })
+
+                                  .join("\n\n");
+
+
+                              alert(result);
+
+                            }}
+
+                          >
+
+                            <ClipboardList size={13} />
+
+                            View Answers
+
+                          </button>
+
+                        </td>
+
+
+                        {/* DELETE */}
+
+                        <td>
+
+                          <button
+                            className="btn btn-danger btn-sm"
+
+                            onClick={() => {
+
+                              deleteAssignment(a.id);
+
+                              reload();
+
+                            }}
+
+                          >
+
+                            <Trash2 size={13} />
+
+                            Delete
+
+                          </button>
+
+                        </td>
+
+
+                      </tr>
+
+                    );
+
+                  })}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        )}
+
+      </div>
+
+    </div>
+
+  </>
+)}
+      
         {/* ── ATTENDANCE ── */}
         {menu === "attendance" && (
           <>
