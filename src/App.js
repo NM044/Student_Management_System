@@ -24,3 +24,4 @@ export default function App() {
   if (user.role === "student") return <StudentDashboard user={user} onLogout={handleLogout} />;
   return <TeacherDashboard user={user} onLogout={handleLogout} />;
 }
+
