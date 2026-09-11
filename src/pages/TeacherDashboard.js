@@ -69,8 +69,8 @@ export default function TeacherDashboard({ user, onLogout }) {
 
   const [menu, setMenu] = useState("dashboard");
 
-  const [refresh, setRefresh] = useState(0);
-
+  
+const [, setRefresh] = useState(0);
   const [selectedCourse, setSelectedCourse] = useState("");
 
   const [selectedDivision, setSelectedDivision] = useState("");

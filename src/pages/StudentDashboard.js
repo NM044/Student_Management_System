@@ -9,7 +9,7 @@ import {
   Clock,
   BookOpen,
   Trophy,
-  Medal,
+  
 } from "lucide-react";
 
 import Sidebar from "../components/Sidebar";
