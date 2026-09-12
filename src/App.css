@@ -1,38 +1,559 @@
-.App {
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
+/* ================= LOGIN PAGE ================= */
 
-.App-header {
-  background-color: #282c34;
+.login-page {
   min-height: 100vh;
   display: flex;
+  font-family: Arial, sans-serif;
+  background: #f8fafc;
+}
+
+
+/* ================= LEFT SIDE ================= */
+
+.login-left {
+  width: 52%;
+  min-height: 100vh;
+
+  background: linear-gradient(
+    135deg,
+    #0f172a,
+    #172554,
+    #1e3a8a
+  );
+
+  color: white;
+
+  padding: 70px 9%;
+
+  display: flex;
   flex-direction: column;
+  justify-content: center;
+}
+
+
+.brand-icon {
+
+  width: 78px;
+  height: 78px;
+
+  background: linear-gradient(
+    135deg,
+    #3b82f6,
+    #2563eb
+  );
+
+  border-radius: 20px;
+
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+
+  margin-bottom: 28px;
+
+  box-shadow:
+    0 15px 35px rgba(0,0,0,0.25);
+}
+
+
+.portal-text {
+
+  color: #93c5fd;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  letter-spacing: 3px;
+
+  margin-bottom: 15px;
+
+}
+
+
+.login-left h1 {
+
+  font-size: 45px;
+
+  line-height: 1.2;
+
+  margin-bottom: 22px;
+
   color: white;
+
 }
 
-.App-link {
-  color: #61dafb;
+
+.login-left p {
+
+  max-width: 600px;
+
+  font-size: 18px;
+
+  line-height: 1.8;
+
+  color: #cbd5e1;
+
+  margin-bottom: 45px;
+
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+
+/* ================= STATS ================= */
+
+.stats {
+
+  display: flex;
+
+  gap: 35px;
+
+  margin-bottom: 40px;
+
+  flex-wrap: wrap;
+
+}
+
+
+.stat-item {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  color: #93c5fd;
+
+}
+
+
+.stat-item div {
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+
+.stat-item strong {
+
+  font-size: 24px;
+
+  color: white;
+
+}
+
+
+.stat-item span {
+
+  color: #cbd5e1;
+
+  font-size: 14px;
+
+}
+
+
+/* ================= FEATURES ================= */
+
+.features {
+
+  display: flex;
+
+  gap: 25px;
+
+  flex-wrap: wrap;
+
+  color: #e2e8f0;
+
+}
+
+
+.features div {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+}
+
+
+/* ================= RIGHT SIDE ================= */
+
+.login-right {
+
+  width: 48%;
+
+  min-height: 100vh;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 30px;
+
+  background: #f8fafc;
+
+}
+
+
+.login-card {
+
+  width: 100%;
+
+  max-width: 500px;
+
+  background: white;
+
+  padding: 45px;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 15px 50px rgba(15,23,42,0.12);
+
+}
+
+
+.mobile-logo {
+
+  color: #2563eb;
+
+  margin-bottom: 20px;
+
+}
+
+
+.login-card h2 {
+
+  font-size: 32px;
+
+  color: #0f172a;
+
+  margin-bottom: 10px;
+
+}
+
+
+.login-subtitle {
+
+  color: #64748b;
+
+  font-size: 16px;
+
+  margin-bottom: 30px;
+
+}
+
+
+/* ================= TABS ================= */
+
+.login-tabs {
+
+  display: flex;
+
+  border-bottom: 1px solid #e2e8f0;
+
+  margin-bottom: 28px;
+
+}
+
+
+.login-tabs button {
+
+  width: 50%;
+
+  padding: 15px;
+
+  border: none;
+
+  background: transparent;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  color: #64748b;
+
+  cursor: pointer;
+
+  border-bottom: 3px solid transparent;
+
+}
+
+
+.login-tabs button.active {
+
+  color: #2563eb;
+
+  border-bottom: 3px solid #2563eb;
+
+}
+
+
+/* ================= INPUT ================= */
+
+.input-group {
+
+  margin-bottom: 22px;
+
+}
+
+
+.input-group label {
+
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #334155;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+}
+
+
+.input-box {
+
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+}
+
+
+.input-box svg {
+
+  position: absolute;
+
+  left: 15px;
+
+  color: #64748b;
+
+}
+
+
+.input-group input,
+.input-group select {
+
+  width: 100%;
+
+  border: 1px solid #cbd5e1;
+
+  border-radius: 10px;
+
+  padding: 15px;
+
+  font-size: 16px;
+
+  outline: none;
+
+  background: white;
+
+}
+
+
+.input-box input {
+
+  padding-left: 48px;
+
+}
+
+
+.input-group input:focus,
+.input-group select:focus {
+
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px rgba(37,99,235,0.1);
+
+}
+
+
+/* ================= PASSWORD EYE ================= */
+
+.eye-button {
+
+  position: absolute;
+
+  right: 12px;
+
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  color: #64748b;
+
+  display: flex;
+
+}
+
+
+/* ================= BUTTON ================= */
+
+.signin-button {
+
+  width: 100%;
+
+  padding: 16px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8
+  );
+
+  color: white;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  margin-top: 5px;
+
+}
+
+
+.signin-button:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 25px rgba(37,99,235,0.3);
+
+}
+
+
+/* ================= REGISTER ================= */
+
+.two-inputs {
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 15px;
+
+}
+
+
+/* ================= MESSAGE ================= */
+
+.message {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 13px;
+
+  border-radius: 10px;
+
+  margin-bottom: 20px;
+
+  font-size: 14px;
+
+}
+
+
+.message.error {
+
+  background: #fee2e2;
+
+  color: #b91c1c;
+
+}
+
+
+.message.success {
+
+  background: #dcfce7;
+
+  color: #15803d;
+
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 900px) {
+
+  .login-page {
+
+    flex-direction: column;
+
   }
-  to {
-    transform: rotate(360deg);
+
+
+  .login-left {
+
+    width: 100%;
+
+    min-height: auto;
+
+    padding: 50px 8%;
+
   }
+
+
+  .login-right {
+
+    width: 100%;
+
+    min-height: auto;
+
+    padding: 40px 20px;
+
+  }
+
+}
+
+
+@media (max-width: 550px) {
+
+  .login-card {
+
+    padding: 30px 20px;
+
+  }
+
+
+  .login-left h1 {
+
+    font-size: 32px;
+
+  }
+
+
+  .two-inputs {
+
+    grid-template-columns: 1fr;
+
+  }
+
 }
